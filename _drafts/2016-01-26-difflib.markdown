@@ -1,0 +1,59 @@
+---
+layout: post
+title:  "Bem Vindo"
+date:   2016-01-28
+categories: dev
+---
+
+
+O python é conhecido por ser uma linguagem com a biblioteca padrão mais completa, o que geralmente é 
+conhecido como <i>batteries included</i>. E de fato o python tem várias módulos interessantes na sua
+biblioteca padrão. Um deles é o difflib, módulo usado para encontrar diferenças entre strings.
+
+<pre>
+    <code class="python custom">
+
+>>> from difflib import SequenceMatcher
+>>> palavra1, palavra2 = "perfeito", "prefeito"
+>>> sequence_matcher = SequenceMatcher(a=palavra1, b=palavra2)
+>>> sequence_matcher.ratio()
+0.875
+    </code>    
+</pre>
+
+Se quisermos encontrar em uma lista de palavras, quais delas são as mais próximas de uma palavra específica usamos:
+
+>>> import difflib
+>>> palavra = "lista"
+>>> possibilidades = ("lst", "list", "ls", "lit")
+>>> difflib.get_close_matches(palavra, possibilidades)
+["lista", "lst", "lit"]
+```
+
+A lista de items retornados por `get_close_matches` é ordenada da possibilidade mais parecida até a menos parecida.
+
+Por padrão `get_close_matches` retorna uma lista com 3 palavras mais próximas, podemos definir a quantidade de palavras que queremos passando o argumento `n`
+
+>>> import difflib
+>>> difflib.get_close_matches(palavra, possibilidades, n=1)
+["lista"]
+```
+
+Podemos também definir o quão igual uma possibilidade pode ser da palavra, isso é feito usando o argumento `cutoff` que tem como valor default `0.6`.
+No exemplo anterior, criamos uma tupla com quatro palavras, sendo que somente três delas foram retornadas por `get_close_matches`. Vamos descobrir por que `ls` não foi retornado.
+
+>>> import difflib
+>>> sequence_matcher = difflib.SequenceMatcher(a="lista", b="ls")
+>>> sequence_matcher.ratio()
+0.5714285714285714
+```
+
+O ratio entre `"lista"` e `"ls"` é menor que 0.6. Se quisermos que `get_close_matches` retorne `"ls"` podemos fazer:
+
+>>> import difflib
+>>> palavra = "lista"
+>>> possibilidades = ("lst", "list", "ls", "lit")
+>>> difflib.get_close_matches(palavra, possibilidades, n=4, cutoff=0.5)
+['list', 'lst', 'lit', 'ls']
+
+Observe que temos que indicar também com o argumento `n` que queremos 4 palavras, caso contrário, mesmo passando o `cutoff` a função `get_close_matches` retornaria apenas as 3 possibilidades mais próximas da palavra.

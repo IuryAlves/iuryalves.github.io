@@ -1,8 +1,0 @@
----
-layout: post
-title:  "Bem Vindo"
-date:   2016-01-28
-categories: dev
----
-
-Bem vindo ao meu blog pessoal
