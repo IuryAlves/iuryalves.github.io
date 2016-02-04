@@ -1,0 +1,93 @@
+---
+layout: post
+title:  "Bem Vindo"
+date:   2016-01-28
+categories: dev
+---
+
+
+O python é conhecido por ser uma linguagem com a biblioteca padrão mais completa, o que geralmente é 
+conhecido como <i>batteries included</i>. E de fato o python tem várias módulos interessantes na sua
+biblioteca padrão. Um deles é o difflib, módulo usado para encontrar diferenças em sequências.
+
+_O difflib é capaz de trabalhar com sequências de vários tipos, com tanto que elas sejam comparáveis (hashable), entretanto para o escopo desse post, vou falar apenas como comparar strings._
+
+
+## Encontrando a palavra mais próxima numa lista.
+
+
+Se quisermos encontrar em uma lista de palavras, quais delas são as mais próximas de uma palavra específica usamos:
+
+<pre>
+    <code class="python custom">
+>>> import difflib
+>>> palavra = "lista"
+>>> possibilidades = ("lst", "list", "ls", "lit")
+>>> difflib.get_close_matches(palavra, possibilidades)
+["list", "lst", "lit"]
+    </code>
+</pre>
+A lista de items retornados por **get_close_matches** é ordenada da possibilidade mais parecida até a menos parecida.
+
+Por padrão **get_close_matches** retorna uma lista com as 3 palavras mais próximas, podemos definir a quantidade de palavras que queremos passando o argumento **n**
+
+<pre>
+    <code class="python custom">
+
+>>> difflib.get_close_matches(palavra, possibilidades, n=1)
+["list"]
+    </code>
+</pre>
+
+Podemos também definir o quão igual uma possibilidade pode, isso é feito usando o argumento **cutoff**.
+
+<pre>
+    <code class="python custom">
+
+>>> difflib.get_close_matches(palavra, possibilidades, n=4, cutoff=0.5)
+['list', 'lst', 'lit', 'ls']
+    </code>
+</pre>
+
+O valor padrão do **cutoff** é 0.6. Observe que eu passsei **n=4** para que **ls** fosse retornado, se eu não tivesse passado esse argumento só seriam retornados as três palavras mais próximas.
+
+Imagino que você deve estar se perguntando como que o cutoff funciona. A explicação está logo abaixo.
+
+## SequenceMatcher
+
+SequenceMatcher é uma classe usada para comparar sequências. Usamos ela da seguinte forma:
+
+<pre>
+    <code class="python custom">
+>>> from difflib import SequenceMatcher
+>>> sequence_matcher = SequenceMatcher(a='lista', b='ls')
+>>> sequence_matcher
+
+    </code>
+</pre>
+
+No exemplo anterior, criamos uma tupla com quatro palavras, sendo que somente três delas foram retornadas por `get_close_matches`. Vamos descobrir por que `ls` não foi retornado.
+
+>>> import difflib
+>>> sequence_matcher = difflib.SequenceMatcher(a="lista", b="ls")
+>>> sequence_matcher.ratio()
+0.5714285714285714
+```
+
+O ratio entre `"lista"` e `"ls"` é menor que 0.6. Se quisermos que `get_close_matches` retorne `"ls"` podemos fazer:
+
+
+
+Observe que temos que indicar também com o argumento `n` que queremos 4 palavras, caso contrário, mesmo passando o `cutoff` a função `get_close_matches` retornaria apenas as 3 possibilidades mais próximas da palavra.
+
+
+<pre>
+    <code class="python custom">
+
+>>> from difflib import SequenceMatcher
+>>> palavra1, palavra2 = "perfeito", "prefeito"
+>>> sequence_matcher = SequenceMatcher(a=palavra1, b=palavra2)
+>>> sequence_matcher.ratio()
+0.875
+    </code>    
+</pre>
