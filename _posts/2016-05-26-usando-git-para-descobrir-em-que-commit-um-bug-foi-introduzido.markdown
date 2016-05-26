@@ -9,9 +9,9 @@ Esses dias eu atualizei uma biblioteca que uso em um projeto chamada [pydocx](ht
     
     html = PyDocX.to_html('file.docx')
 
-Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como `<li>` ao invés de `<p>`.
+Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como <li> ao invés de <p>.
 
-O parágrafo abaixo, por exemplo, começou a ser convertido para `<li>Exercício 08. 80...` ao invés de `<p>Exercício 08. 80...`:
+O parágrafo abaixo, por exemplo, começou a ser convertido para <li>Exercício 08. 80... ao invés de <p>Exercício 08. 80...:
 
 ![paragraph](https://raw.githubusercontent.com/IuryAlves/iuryalves.github.io/master/_examples/2016-05-23.descobrindo-em-que-commit-um-bug-foi-introduzido-com-git/paragraph.png)
 
@@ -23,7 +23,7 @@ Vamos ir para a versão em que o bug não acontecia.
 
 	git checkout v.0.7.0
 
-Vamos criar um caso de teste chamado `docx_test_case.py´ que reproduz o comportamento esperado.
+Vamos criar um caso de teste chamado *docx_test_case.py* que reproduz o comportamento esperado.
 
 ```python
 # coding: utf-8
