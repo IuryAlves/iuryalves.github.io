@@ -19,7 +19,7 @@ Para identificar em que commit esse bug foi inserido eu usei um comando do git c
 
 	git clone git@github.com:CenterForOpenScience/pydocx.git && cd pydocx
 
-Vamos ir para a versão em que o bug não acontecia.
+Vamos para a versão em que o bug não acontecia.
 
 	git checkout v.0.7.0
 
