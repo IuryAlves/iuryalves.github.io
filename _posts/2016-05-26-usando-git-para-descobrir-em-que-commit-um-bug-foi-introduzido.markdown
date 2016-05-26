@@ -13,7 +13,7 @@ Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a aconte
 
 O parágrafo abaixo, por exemplo, começou a ser convertido para *<li>Exercício 08. 80...* ao invés de *<p>Exercício 08. 80...:*
 
-![paragraph](https://raw.githubusercontent.com/IuryAlves/iuryalves.github.io/master/_examples/2016-05-23.descobrindo-em-que-commit-um-bug-foi-introduzido-com-git/paragraph.png)
+*Exercício 08. 80 - O ânion bromato reage com o ânion brometo em meio ácido gerando a substância simples bromo segundo a equação:* 
 
 Para identificar em que commit esse bug foi inserido eu usei um comando do git chamado bisect. Antes de mostrarmos como o bisect funciona, vamos reproduzir o bug atraveś de um caso de teste:
 
