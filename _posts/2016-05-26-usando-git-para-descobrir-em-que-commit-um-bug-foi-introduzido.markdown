@@ -9,9 +9,9 @@ Esses dias eu atualizei uma biblioteca que uso em um projeto chamada [pydocx](ht
     
     html = PyDocX.to_html('file.docx')
 
-Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como <li> ao invés de <p>.
+Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como *<li>* ao invés de *<p>*.
 
-O parágrafo abaixo, por exemplo, começou a ser convertido para <li>Exercício 08. 80... ao invés de <p>Exercício 08. 80...:
+O parágrafo abaixo, por exemplo, começou a ser convertido para *<li>Exercício 08. 80...* ao invés de *<p>Exercício 08. 80...:*
 
 ![paragraph](https://raw.githubusercontent.com/IuryAlves/iuryalves.github.io/master/_examples/2016-05-23.descobrindo-em-que-commit-um-bug-foi-introduzido-com-git/paragraph.png)
 
@@ -113,7 +113,7 @@ Se o teste não falhasse, iríamos usar:
 
     git bisect good
 
-O git bisect irá escolher outro commit e deveremos informar novamente se o bug continua acontecendo ou não.Essse último passo será repetido até que o git bisect encontre o commit em que o bug começou a ocorrer.
+O git bisect irá escolher outro commit e deveremos informar novamente se o bug continua acontecendo ou não. Essse último passo será repetido até que o git bisect encontre o commit em que o bug começou a ocorrer.
 
 No caso desse exemplo o git bisect mostrou a seguinte saída:
 
@@ -168,5 +168,6 @@ O git bisect ainda possui mais algumas opções interessantes que valem a pena c
 
 Você pode encontrar o docx usado nesse post [aqui](https://github.com/IuryAlves/iuryalves.github.io/raw/master/_examples/2016-05-23.descobrindo-em-que-commit-um-bug-foi-introduzido-com-git/file.docx)
 
-### Referências
+### Referências:
+
 * git-scm bisect: https://git-scm.com/docs/git-bisect
