@@ -171,4 +171,4 @@ Você pode encontrar o docx usado nesse post [aqui](https://github.com/IuryAlves
 ### Referências:
 
 
-* git-scm bisect: https://git-scm.com/docs/git-bisect
+* [git-scm bisect: https://git-scm.com/docs/git-bisect](git-scm bisect: https://git-scm.com/docs/git-bisect)
