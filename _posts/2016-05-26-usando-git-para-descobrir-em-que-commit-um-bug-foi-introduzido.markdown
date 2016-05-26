@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: Usando git para descobrir em que commit um bug foi introduzido
 layout: post
 ---
