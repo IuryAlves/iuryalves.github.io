@@ -114,7 +114,7 @@ Se o teste não falhasse, iríamos usar:
 
 O git bisect irá escolher outro commit e deveremos informar novamente se o bug continua acontecendo ou não. Essse último passo será repetido até que o git bisect encontre o commit em que o bug começou a ocorrer.
 
-No caso desse exemplo o git bisect mostrou a seguinte saída:
+No caso desse exemplo o git bisect informou que o seguinte commit introduziu o bug:
 
 ```
 3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
@@ -129,7 +129,6 @@ Para encerrar o git bisect use:
 
     git bisect reset
 
-E aí está o commit que inseriu o bug.
 
 ### Modo automatico
 
@@ -142,7 +141,7 @@ Para usar esse modo você precisa criar um script que reproduza o bug como, por 
 
 Para usar o modo automático basta fazer:
 
-	git bisect run script argumentos
+	git bisect run <script> <arguments>
 
 *o git bisect run aceita qualquer executável.*
 
@@ -172,11 +171,11 @@ Para encerrar o git bisect use:
 
 ### Resumo
 
-* Use `git bisect start` para iniciar.
-* Use `git bisect good`  `commit` para informar um commit em que o bug não acontece.
-* Use `git bisect bad` `commit` para informar um commit em que o bug acontece.
-* Use `git bisect run <script> <arguments>` para usar o modo automático
-* Se você não passar um commit para `git bisect good | bad` o bisect pegará o commit corrente
+* Use git bisect start para iniciar.
+* Use git bisect good  commit`para informar um commit em que o bug não acontece.
+* Use git bisect bad  commit para informar um commit em que o bug acontece.
+* Use git bisect run <script> <arguments> para usar o modo automático
+* Se você não passar um commit para git bisect good | bad o bisect pegará o commit corrente
  
 
 Você pode encontrar o docx usado nesse post [aqui](https://github.com/IuryAlves/iuryalves.github.io/raw/master/_examples/2016-05-23.descobrindo-em-que-commit-um-bug-foi-introduzido-com-git/file.docx)
