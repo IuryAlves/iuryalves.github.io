@@ -70,8 +70,8 @@ Ran 1 test in 0.235s
 
 FAILED (failures=1)
 ```
+Opa! O teste começou a falhar. Com isso temos as informações necessárias para começar a usar o git bisect.
 
-Agora que reproduzidos o bug e sabemos os commits em que o teste passa e falha vamos usar o git bisect para identificar o commit em que o bug começou a ocorrer.
 
 ### Usando git bisect para encontrar o commit que introduziu o bug
 
@@ -114,7 +114,7 @@ Se o teste não falhasse, iríamos usar:
 
 O git bisect irá escolher outro commit e deveremos informar novamente se o bug continua acontecendo ou não. Essse último passo será repetido até que o git bisect encontre o commit em que o bug começou a ocorrer.
 
-No caso desse exemplo o git bisect mostrou a seguinte saída:
+No caso desse exemplo o git bisect informou que o seguinte commit introduziu o bug:
 
 ```
 3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
@@ -125,32 +125,34 @@ Date:   Wed Jul 29 15:17:49 2015 -0400
     Refs #134. Handle tab characters like spaces
 ```
 
-E aí está o commit que inseriu o bug.
+Para encerrar o git bisect use:
+
+    git bisect reset
+
 
 ### Modo automatico
 
 O último passo do git bisect pode ser demorado se existirem muitos commits entre o commit bom (good) e o commit ruim (bad).
 Para isso o git bisect conta com um modo automático. 
 
-Para usar esse modo você precisa criar um script que reproduza o bug e 
-retorne status de saída 0 se o bug acontece ou status diferente de 0 caso contrário.
+Para usar esse modo você precisa criar um script que reproduza o bug como, por exemplo, o caso de teste que criamos. Esse script precisa retornar código de status 0 se o bug acontecer e código de status diferente de 0 caso contrário.
+
+*Esse script pode ser um caso de teste ou qualquer programa que faça uma asserção.*
 
 Para usar o modo automático basta fazer:
 
-	git bisect run script argumentos
+	git bisect run <script> <arguments>
 
 *o git bisect run aceita qualquer executável.*
 
-Vamos então reusar o git bisect no modo automático:
+Vamos então usar o git bisect no modo automático:
 
-Você pode usar `git bisect reset` para reinicializar o git bisect.
-
-1. git bisect reset
+1. git bisect start
 2. git bisect good v0.7.0
 3. git bisect bad v0.9.9
 4. git bisect run python docx_test_case.py
 
-*Casos de teste com unittest já retornam status diferente de zero em caso de falha.*
+*Casos de teste feitos com unittest já retornam status diferente de zero em caso de falha.*
 
 Saída:
 
@@ -163,7 +165,22 @@ Date:   Wed Jul 29 15:17:49 2015 -0400
     Refs #134. Handle tab characters like spaces
 ```
 
-O git bisect ainda possui mais algumas opções interessantes que valem a pena conferir.
+Para encerrar o git bisect use:
+
+    git bisect reset
+
+### Resumo:
+
+* Use git bisect start para iniciar.
+
+* Use git bisect good  commit`para informar um commit em que o bug não acontece.
+
+* Use git bisect bad  commit para informar um commit em que o bug acontece.
+
+* Use git bisect run script arguments para usar o modo automático.
+
+* Se você não passar um commit para git bisect good | bad o bisect pegará o commit corrente
+ 
 
 Você pode encontrar o docx usado nesse post [aqui](https://github.com/IuryAlves/iuryalves.github.io/raw/master/_examples/2016-05-23.descobrindo-em-que-commit-um-bug-foi-introduzido-com-git/file.docx)
 
