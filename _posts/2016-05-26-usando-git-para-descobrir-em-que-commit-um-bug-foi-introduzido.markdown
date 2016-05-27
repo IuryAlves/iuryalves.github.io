@@ -169,12 +169,12 @@ Para encerrar o git bisect use:
 
     git bisect reset
 
-### Resumo
+### Resumo:
 
 * Use git bisect start para iniciar.
 * Use git bisect good  commit`para informar um commit em que o bug não acontece.
 * Use git bisect bad  commit para informar um commit em que o bug acontece.
-* Use git bisect run <script> <arguments> para usar o modo automático
+* Use git bisect run script arguments para usar o modo automático.
 * Se você não passar um commit para git bisect good | bad o bisect pegará o commit corrente
  
 
