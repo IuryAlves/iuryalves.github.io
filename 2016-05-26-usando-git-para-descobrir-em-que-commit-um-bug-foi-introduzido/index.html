@@ -1,0 +1,166 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>Your Site</title>
+  
+  
+
+</head>
+<body class="box">
+
+<nav class="nav-menu">
+    <ul>
+        <li><a href="/flask-ghpages-example/">Home</a></li>
+        <li><a href="https://github.com/sloria/flask-ghpages-example">Source</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+
+  <div class="content" role="main">
+    
+<h1>Usando git para descobrir em que commit um bug foi introduzido</h1>
+<p>2016-05-25 12:00:00</p>
+<p>Esses dias eu atualizei uma biblioteca que uso em um projeto chamada <a href="https://github.com/CenterForOpenScience/pydocx">pydocx</a>. Essa biblioteca converte docx para html, seu uso é bem simples, basta fazer:</p>
+<pre><code>from pydocx import PyDocX
+
+html = PyDocX.to_html('file.docx')
+</code></pre>
+<p>Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como <em><li></em> ao invés de <em><p></em>.</p>
+<p>O parágrafo abaixo, por exemplo, começou a ser convertido para <em><li>Exercício 08. 80...</em> ao invés de <em><p>Exercício 08. 80...:</em></p>
+<p><em>Exercício 08. 80 - O ânion bromato reage com o ânion brometo em meio ácido gerando a substância simples bromo segundo a equação:</em> </p>
+<p>Para identificar em que commit esse bug foi inserido eu usei um comando do git chamado bisect. Antes de mostrarmos como o bisect funciona, vamos reproduzir o bug atraveś de um caso de teste:</p>
+<pre><code>git clone git@github.com:CenterForOpenScience/pydocx.git &amp;&amp; cd pydocx
+</code></pre>
+<p>Vamos para a versão em que o bug não acontecia.</p>
+<pre><code>git checkout v.0.7.0
+</code></pre>
+<p>Vamos criar um caso de teste chamado <em>docx_test_case.py</em> que reproduz o comportamento esperado.</p>
+<p>```python</p>
+<h1>coding: utf-8</h1>
+<p>import unittest
+from pydocx import PyDocX</p>
+<p>class DocxToHtmlTestCase(unittest.TestCase):</p>
+<p>def test_paragraph(self):
+    html = PyDocX.to_html('file.docx').encode("utf-8")</p>
+<pre><code>self.assertIn('&lt;p&gt;Exercício 08. 80', html)
+</code></pre>
+<p>if <strong>name</strong> == '<strong>main</strong>':
+  unitttest.main()</p>
+<p>```
+Executando o teste</p>
+<pre><code>python docx_test_case.py
+</code></pre>
+<h2>```.</h2>
+<p>Ran 1 test in 0.309s</p>
+<p>OK
+```</p>
+<p>O caso de teste é bem simples, ele apenas espera que o html gerado contenha um paragráfo <code>&lt;p&gt;</code> com o texto <em>Exercício 08. 80</em>.</p>
+<p>Agora que sabemos que a versão 0.7.0 funciona vamos fazer checkout para o último release do projeto.</p>
+<pre><code>git checkout v0.9.9
+</code></pre>
+<p>Rodando novamente o caso de teste:</p>
+<pre><code>python docx_test_case.py
+</code></pre>
+<h2>```</h2>
+<p>Ran 1 test in 0.235s</p>
+<p>FAILED (failures=1)
+```
+Opa! O teste começou a falhar. Com isso temos as informações necessárias para começar a usar o git bisect.</p>
+<h3>Usando git bisect para encontrar o commit que introduziu o bug</h3>
+<p>Para iniciar o git bisect faça:</p>
+<pre><code>git bisect start
+</code></pre>
+<p>Precisamos informar pro git bisect um commit bom e um commit ruim, no nosso caso v0.7.0 e v0.9.9.</p>
+<pre><code>git bisect good v0.7.0
+
+git bisect bad v0.9.9
+</code></pre>
+<p>A partir desse ponto o git bisect irá escolher um commit entre o commit bom e o ruim. A saída é semelhante com essa:</p>
+<p><code>Bisecting: 277 revisions left to test after this (roughly 8 steps)
+[551d8fec898fb773fc6585478918e74c268142f0] Refs #134. More test cases</code></p>
+<p>Rodando novamente o caso de teste percebemos que o teste continua falhando.</p>
+<pre><code>python docx_test_case.py
+</code></pre>
+<h2>```</h2>
+<p>Ran 1 test in 0.235s</p>
+<p>FAILED (failures=1)
+```</p>
+<p>Iremos informar para o git bisect que o bug continua acontecendo:</p>
+<pre><code>git bisect bad
+</code></pre>
+<p>Se o teste não falhasse, iríamos usar:</p>
+<pre><code>git bisect good
+</code></pre>
+<p>O git bisect irá escolher outro commit e deveremos informar novamente se o bug continua acontecendo ou não. Essse último passo será repetido até que o git bisect encontre o commit em que o bug começou a ocorrer.</p>
+<p>No caso desse exemplo o git bisect informou que o seguinte commit introduziu o bug:</p>
+<p>```
+3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
+commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
+Author: <author> <email>
+Date:   Wed Jul 29 15:17:49 2015 -0400</p>
+<pre><code>Refs #134. Handle tab characters like spaces
+</code></pre>
+<p>```</p>
+<p>Para encerrar o git bisect use:</p>
+<pre><code>git bisect reset
+</code></pre>
+<h3>Modo automatico</h3>
+<p>O último passo do git bisect pode ser demorado se existirem muitos commits entre o commit bom (good) e o commit ruim (bad).
+Para isso o git bisect conta com um modo automático. </p>
+<p>Para usar esse modo você precisa criar um script que reproduza o bug como, por exemplo, o caso de teste que criamos. Esse script precisa retornar código de status 0 se o bug acontecer e código de status diferente de 0 caso contrário.</p>
+<p><em>Esse script pode ser um caso de teste ou qualquer programa que faça uma asserção.</em></p>
+<p>Para usar o modo automático basta fazer:</p>
+<pre><code>git bisect run &lt;script&gt; &lt;arguments&gt;
+</code></pre>
+<p><em>o git bisect run aceita qualquer executável.</em></p>
+<p>Vamos então usar o git bisect no modo automático:</p>
+<ol>
+<li>git bisect start</li>
+<li>git bisect good v0.7.0</li>
+<li>git bisect bad v0.9.9</li>
+<li>git bisect run python docx_test_case.py</li>
+</ol>
+<p><em>Casos de teste feitos com unittest já retornam status diferente de zero em caso de falha.</em></p>
+<p>Saída:</p>
+<p>```
+3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
+commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
+Author: <author> <email>
+Date:   Wed Jul 29 15:17:49 2015 -0400</p>
+<pre><code>Refs #134. Handle tab characters like spaces
+</code></pre>
+<p>```</p>
+<p>Para encerrar o git bisect use:</p>
+<pre><code>git bisect reset
+</code></pre>
+<h3>Resumo:</h3>
+<ul>
+<li>
+<p>Use git bisect start para iniciar.</p>
+</li>
+<li>
+<p>Use git bisect good  commit`para informar um commit em que o bug não acontece.</p>
+</li>
+<li>
+<p>Use git bisect bad  commit para informar um commit em que o bug acontece.</p>
+</li>
+<li>
+<p>Use git bisect run script arguments para usar o modo automático.</p>
+</li>
+<li>
+<p>Se você não passar um commit para git bisect good | bad o bisect pegará o commit corrente</p>
+</li>
+</ul>
+<p>Você pode encontrar o docx usado nesse post <a href="https://github.com/IuryAlves/iuryalves.github.io/raw/master/_examples/2016-05-23.descobrindo-em-que-commit-um-bug-foi-introduzido-com-git/file.docx">aqui</a></p>
+<h3>Referências:</h3>
+<ul>
+<li><a href="https://git-scm.com/docs/git-bisect">git-scm bisect: https://git-scm.com/docs/git-bisect</a></li>
+</ul>
+
+  </div>
+
+</div><!-- end container -->
+
+</body>
+</html>

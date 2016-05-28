@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<center>
+	<h1 class="title dark-grey"> {{title }} </h1>
+	<img src="{{ url_for('static', filename='img/turing-machine.png') }}">
+</center>
+<ul class="page-list">
+  {% for page in pages %}
+      <li>
+      <a class="link" href="{{ url_for('page', path=page.path) }}">
+         <h1 class="dark-grey">{{ page.meta.title }}</h1>
+      </a>
+      	<time datetime="{{ page.meta.date }}" class="post-date">{{ page.meta.date }}</time>
+         <p>{{ page.description}}</p>
+       </li>
+
+  {% endfor %}
+</ul>
+{% endblock %}
+{% block css %}
+	{{super()}}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+{% endblock %}
+{% block footer %}
+	{% include 'footer.html' %}
+{% endblock %}
