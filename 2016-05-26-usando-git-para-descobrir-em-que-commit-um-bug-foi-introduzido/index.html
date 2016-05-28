@@ -1,40 +1,62 @@
 <!doctype html>
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/img/favicon.png" type="image/png">
+
   <title>Your Site</title>
+
+  <script type="text/javascript" src="/iuryalves.github.io/static/js/analytics.js"></script>
+  <script type="text/javascript" src="/iuryalves.github.io/static/js/typekit.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
   
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville:700|Sanchez" type="text/css">
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/github.min.css">
+      <link rel="stylesheet" href="/iuryalves.github.io/static/css/screen.css">
+      <link rel="stylesheet" href="/iuryalves.github.io/static/css/typekit.css">
+      <link rel="stylesheet" href="/iuryalves.github.io/static/css/index.css">
+      
   
 
 </head>
-<body class="box">
+<body>
 
 <nav class="nav-menu">
-    <ul>
-        <li><a href="/flask-ghpages-example/">Home</a></li>
-        <li><a href="https://github.com/sloria/flask-ghpages-example">Source</a></li>
+    <ul class="li-inline">
+        <li><a href="/iuryalves.github.io/">Página Inicial</a></li>
+        <li><a href="https://github.com/sloria/flask-ghpages-example">Código Fonte</a></li>
     </ul>
 </nav>
 
-<div class="container">
+  <section role="main">
+    <article class="post">
+      
+	<header>
+	<h1 class="post-title">Usando git para descobrir em que commit um bug foi introduzido</h1>
+	<time datetime="2016-05-25 12:00:00" class="post-date">2016-05-25 12:00:00</time>
+</header>
+	<p>Esses dias eu atualizei uma biblioteca que uso em um projeto chamada <a href="https://github.com/CenterForOpenScience/pydocx">pydocx</a>. Essa biblioteca converte docx para html, seu uso é bem simples, basta fazer:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">pydocx</span> <span class="kn">import</span> <span class="n">PyDocX</span>
 
-  <div class="content" role="main">
-    
-<h1>Usando git para descobrir em que commit um bug foi introduzido</h1>
-<p>2016-05-25 12:00:00</p>
-<p>Esses dias eu atualizei uma biblioteca que uso em um projeto chamada <a href="https://github.com/CenterForOpenScience/pydocx">pydocx</a>. Essa biblioteca converte docx para html, seu uso é bem simples, basta fazer:</p>
-<pre><code>from pydocx import PyDocX
+<span class="n">html</span> <span class="o">=</span> <span class="n">PyDocX</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="s1">&#39;file.docx&#39;</span><span class="p">)</span>
+</pre></div>
 
-html = PyDocX.to_html('file.docx')
-</code></pre>
+
 <p>Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como <em><li></em> ao invés de <em><p></em>.</p>
 <p>O parágrafo abaixo, por exemplo, começou a ser convertido para <em><li>Exercício 08. 80...</em> ao invés de <em><p>Exercício 08. 80...:</em></p>
 <p><em>Exercício 08. 80 - O ânion bromato reage com o ânion brometo em meio ácido gerando a substância simples bromo segundo a equação:</em> </p>
 <p>Para identificar em que commit esse bug foi inserido eu usei um comando do git chamado bisect. Antes de mostrarmos como o bisect funciona, vamos reproduzir o bug atraveś de um caso de teste:</p>
-<pre><code>git clone git@github.com:CenterForOpenScience/pydocx.git &amp;&amp; cd pydocx
-</code></pre>
+<div class="codehilite"><pre><span></span>git clone git@github.com:CenterForOpenScience/pydocx.git &amp;&amp; cd pydocx
+</pre></div>
+
+
 <p>Vamos para a versão em que o bug não acontecia.</p>
-<pre><code>git checkout v.0.7.0
-</code></pre>
+<div class="codehilite"><pre><span></span>git checkout v.0.7.0
+</pre></div>
+
+
 <p>Vamos criar um caso de teste chamado <em>docx_test_case.py</em> que reproduz o comportamento esperado.</p>
 <p>```python</p>
 <h1>coding: utf-8</h1>
@@ -43,25 +65,33 @@ from pydocx import PyDocX</p>
 <p>class DocxToHtmlTestCase(unittest.TestCase):</p>
 <p>def test_paragraph(self):
     html = PyDocX.to_html('file.docx').encode("utf-8")</p>
-<pre><code>self.assertIn('&lt;p&gt;Exercício 08. 80', html)
-</code></pre>
+<div class="codehilite"><pre><span></span>self.assertIn(&#39;&lt;p&gt;Exercício 08. 80&#39;, html)
+</pre></div>
+
+
 <p>if <strong>name</strong> == '<strong>main</strong>':
   unitttest.main()</p>
 <p>```
 Executando o teste</p>
-<pre><code>python docx_test_case.py
-</code></pre>
+<div class="codehilite"><pre><span></span>python docx_test_case.py
+</pre></div>
+
+
 <h2>```.</h2>
 <p>Ran 1 test in 0.309s</p>
 <p>OK
 ```</p>
 <p>O caso de teste é bem simples, ele apenas espera que o html gerado contenha um paragráfo <code>&lt;p&gt;</code> com o texto <em>Exercício 08. 80</em>.</p>
 <p>Agora que sabemos que a versão 0.7.0 funciona vamos fazer checkout para o último release do projeto.</p>
-<pre><code>git checkout v0.9.9
-</code></pre>
+<div class="codehilite"><pre><span></span>git checkout v0.9.9
+</pre></div>
+
+
 <p>Rodando novamente o caso de teste:</p>
-<pre><code>python docx_test_case.py
-</code></pre>
+<div class="codehilite"><pre><span></span>python docx_test_case.py
+</pre></div>
+
+
 <h2>```</h2>
 <p>Ran 1 test in 0.235s</p>
 <p>FAILED (failures=1)
@@ -69,29 +99,39 @@ Executando o teste</p>
 Opa! O teste começou a falhar. Com isso temos as informações necessárias para começar a usar o git bisect.</p>
 <h3>Usando git bisect para encontrar o commit que introduziu o bug</h3>
 <p>Para iniciar o git bisect faça:</p>
-<pre><code>git bisect start
-</code></pre>
+<div class="codehilite"><pre><span></span>git bisect start
+</pre></div>
+
+
 <p>Precisamos informar pro git bisect um commit bom e um commit ruim, no nosso caso v0.7.0 e v0.9.9.</p>
-<pre><code>git bisect good v0.7.0
+<div class="codehilite"><pre><span></span>git bisect good v0.7.0
 
 git bisect bad v0.9.9
-</code></pre>
+</pre></div>
+
+
 <p>A partir desse ponto o git bisect irá escolher um commit entre o commit bom e o ruim. A saída é semelhante com essa:</p>
 <p><code>Bisecting: 277 revisions left to test after this (roughly 8 steps)
 [551d8fec898fb773fc6585478918e74c268142f0] Refs #134. More test cases</code></p>
 <p>Rodando novamente o caso de teste percebemos que o teste continua falhando.</p>
-<pre><code>python docx_test_case.py
-</code></pre>
+<div class="codehilite"><pre><span></span>python docx_test_case.py
+</pre></div>
+
+
 <h2>```</h2>
 <p>Ran 1 test in 0.235s</p>
 <p>FAILED (failures=1)
 ```</p>
 <p>Iremos informar para o git bisect que o bug continua acontecendo:</p>
-<pre><code>git bisect bad
-</code></pre>
+<div class="codehilite"><pre><span></span>git bisect bad
+</pre></div>
+
+
 <p>Se o teste não falhasse, iríamos usar:</p>
-<pre><code>git bisect good
-</code></pre>
+<div class="codehilite"><pre><span></span>git bisect good
+</pre></div>
+
+
 <p>O git bisect irá escolher outro commit e deveremos informar novamente se o bug continua acontecendo ou não. Essse último passo será repetido até que o git bisect encontre o commit em que o bug começou a ocorrer.</p>
 <p>No caso desse exemplo o git bisect informou que o seguinte commit introduziu o bug:</p>
 <p>```
@@ -99,20 +139,26 @@ git bisect bad v0.9.9
 commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
 Author: <author> <email>
 Date:   Wed Jul 29 15:17:49 2015 -0400</p>
-<pre><code>Refs #134. Handle tab characters like spaces
-</code></pre>
+<div class="codehilite"><pre><span></span>Refs #134. Handle tab characters like spaces
+</pre></div>
+
+
 <p>```</p>
 <p>Para encerrar o git bisect use:</p>
-<pre><code>git bisect reset
-</code></pre>
+<div class="codehilite"><pre><span></span>git bisect reset
+</pre></div>
+
+
 <h3>Modo automatico</h3>
 <p>O último passo do git bisect pode ser demorado se existirem muitos commits entre o commit bom (good) e o commit ruim (bad).
 Para isso o git bisect conta com um modo automático. </p>
 <p>Para usar esse modo você precisa criar um script que reproduza o bug como, por exemplo, o caso de teste que criamos. Esse script precisa retornar código de status 0 se o bug acontecer e código de status diferente de 0 caso contrário.</p>
 <p><em>Esse script pode ser um caso de teste ou qualquer programa que faça uma asserção.</em></p>
 <p>Para usar o modo automático basta fazer:</p>
-<pre><code>git bisect run &lt;script&gt; &lt;arguments&gt;
-</code></pre>
+<div class="codehilite"><pre><span></span>git bisect run &lt;script&gt; &lt;arguments&gt;
+</pre></div>
+
+
 <p><em>o git bisect run aceita qualquer executável.</em></p>
 <p>Vamos então usar o git bisect no modo automático:</p>
 <ol>
@@ -128,12 +174,16 @@ Para isso o git bisect conta com um modo automático. </p>
 commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
 Author: <author> <email>
 Date:   Wed Jul 29 15:17:49 2015 -0400</p>
-<pre><code>Refs #134. Handle tab characters like spaces
-</code></pre>
+<div class="codehilite"><pre><span></span>Refs #134. Handle tab characters like spaces
+</pre></div>
+
+
 <p>```</p>
 <p>Para encerrar o git bisect use:</p>
-<pre><code>git bisect reset
-</code></pre>
+<div class="codehilite"><pre><span></span>git bisect reset
+</pre></div>
+
+
 <h3>Resumo:</h3>
 <ul>
 <li>
@@ -157,10 +207,24 @@ Date:   Wed Jul 29 15:17:49 2015 -0400</p>
 <ul>
 <li><a href="https://git-scm.com/docs/git-bisect">git-scm bisect: https://git-scm.com/docs/git-bisect</a></li>
 </ul>
+<div id="disqus_thread"></div>
+<script>
+    (function() {
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//iurythoughts.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
-  </div>
+    </article>
+  </section>
 
-</div><!-- end container -->
+
+
 
 </body>
 </html>
