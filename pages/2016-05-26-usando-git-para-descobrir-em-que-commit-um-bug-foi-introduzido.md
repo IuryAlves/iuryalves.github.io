@@ -71,7 +71,7 @@ Rodando novamente o caso de teste:
 Opa! O teste começou a falhar. Agora temos as informações necessárias para começar a usar o git bisect.
 
 
-### Usando git bisect para encontrar o commit que introduziu o bug
+## Usando git bisect para encontrar o commit que introduziu o bug
 
 
 Para iniciar o git bisect faça:
