@@ -126,7 +126,7 @@ Para encerrar o git bisect use:
     git bisect reset
 
 
-### Modo automatico
+## Modo automatico
 
 O último passo do git bisect pode ser demorado se existirem muitos commits entre o commit bom (good) e o commit ruim (bad).
 Para isso o git bisect conta com um modo automático. 
@@ -165,7 +165,7 @@ Para encerrar o git bisect use:
 
     git bisect reset
 
-### Resumo:
+## Resumo:
 
 * Use git bisect start para iniciar.
 
@@ -180,7 +180,7 @@ Para encerrar o git bisect use:
 
 Você pode encontrar o docx usado nesse post [aqui](https://github.com/IuryAlves/iuryalves.github.io/raw/master/static/file.docx)
 
-### Referências:
+## Referências:
 
 
-* [git-scm bisect: https://git-scm.com/docs/git-bisect](https://git-scm.com/docs/git-bisect)
+* [https://git-scm.com/docs/git-bisect](https://git-scm.com/docs/git-bisect)
