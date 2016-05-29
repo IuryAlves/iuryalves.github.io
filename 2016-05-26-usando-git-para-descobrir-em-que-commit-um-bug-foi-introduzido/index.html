@@ -5,20 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="/img/favicon.png" type="image/png">
 
-  <title>Your Site</title>
+  <title>Iury&#39;s thoughts</title>
 
   <script type="text/javascript" src="/iuryalves.github.io/static/js/analytics.js"></script>
-  <script type="text/javascript" src="/iuryalves.github.io/static/js/typekit.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
   
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville:700|Sanchez" type="text/css">
-      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/github.min.css">
+	
       <link rel="stylesheet" href="/iuryalves.github.io/static/css/screen.css">
-      <link rel="stylesheet" href="/iuryalves.github.io/static/css/typekit.css">
       <link rel="stylesheet" href="/iuryalves.github.io/static/css/index.css">
+      <link rel="stylesheet" href="/iuryalves.github.io/static/css/base.css">
       
   
+	<link rel="stylesheet" href="/iuryalves.github.io/pygments.css">
+	<link rel="stylesheet" href="/iuryalves.github.io/static/css/page.css">
+
 
 </head>
 <body>
@@ -26,7 +25,7 @@
 <nav class="nav-menu">
     <ul class="li-inline">
         <li><a href="/iuryalves.github.io/">Página Inicial</a></li>
-        <li><a href="https://github.com/sloria/flask-ghpages-example">Código Fonte</a></li>
+        <li><a href="https://github.com/IuryAlves/iuryalves.github.io">Código Fonte</a></li>
     </ul>
 </nav>
 
@@ -34,8 +33,8 @@
     <article class="post">
       
 	<header>
-	<h1 class="post-title">Usando git para descobrir em que commit um bug foi introduzido</h1>
-	<time datetime="2016-05-25 12:00:00" class="post-date">2016-05-25 12:00:00</time>
+	<h1 class="post-title dark-grey">Usando git para descobrir em que commit um bug foi introduzido</h1>
+	<time datetime="2016-05-25 12:00:00" class="post-date">25/05/2016</time>
 </header>
 	<p>Esses dias eu atualizei uma biblioteca que uso em um projeto chamada <a href="https://github.com/CenterForOpenScience/pydocx">pydocx</a>. Essa biblioteca converte docx para html, seu uso é bem simples, basta fazer:</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">pydocx</span> <span class="kn">import</span> <span class="n">PyDocX</span>
@@ -44,10 +43,14 @@
 </pre></div>
 
 
-<p>Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como <em><li></em> ao invés de <em><p></em>.</p>
-<p>O parágrafo abaixo, por exemplo, começou a ser convertido para <em><li>Exercício 08. 80...</em> ao invés de <em><p>Exercício 08. 80...:</em></p>
-<p><em>Exercício 08. 80 - O ânion bromato reage com o ânion brometo em meio ácido gerando a substância simples bromo segundo a equação:</em> </p>
-<p>Para identificar em que commit esse bug foi inserido eu usei um comando do git chamado bisect. Antes de mostrarmos como o bisect funciona, vamos reproduzir o bug atraveś de um caso de teste:</p>
+<p>Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como <code>&lt;li&gt;</code> ao invés de <code>&lt;p&gt;</code>.</p>
+<p>O parágrafo abaixo, por exemplo, começou a ser convertido para <code>&lt;li&gt;Exercício 08. 80...</code> ao invés de <code>&lt;p&gt;Exercício 08. 80...</code></p>
+<div class="codehilite"><pre><span></span>Exercício 08. 80 - O ânion bromato reage com o ânion brometo em meio ácido
+gerando a substância simples bromo segundo a equação:
+</pre></div>
+
+
+<p>Para identificar em que commit esse bug foi inserido eu usei um comando do git chamado bisect. Para usarmos o <code>git bisect</code> precisamos encontrar um commit em que o bug acontece e um commit em que o bug não acontece, vamos fazer isso criando um teste unitário:</p>
 <div class="codehilite"><pre><span></span>git clone git@github.com:CenterForOpenScience/pydocx.git &amp;&amp; cd pydocx
 </pre></div>
 
@@ -57,31 +60,36 @@
 </pre></div>
 
 
-<p>Vamos criar um caso de teste chamado <em>docx_test_case.py</em> que reproduz o comportamento esperado.</p>
-<p>```python</p>
-<h1>coding: utf-8</h1>
-<p>import unittest
-from pydocx import PyDocX</p>
-<p>class DocxToHtmlTestCase(unittest.TestCase):</p>
-<p>def test_paragraph(self):
-    html = PyDocX.to_html('file.docx').encode("utf-8")</p>
-<div class="codehilite"><pre><span></span>self.assertIn(&#39;&lt;p&gt;Exercício 08. 80&#39;, html)
+<p>Vamos criar um caso de teste chamado <code>docx_test_case.py</code> que reproduz o comportamento esperado.</p>
+<div class="codehilite"><pre><span></span><span class="c1"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">pydocx</span> <span class="kn">import</span> <span class="n">PyDocX</span>
+
+
+<span class="k">class</span> <span class="nc">DocxToHtmlTestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+  <span class="k">def</span> <span class="nf">test_paragraph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">PyDocX</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="s1">&#39;file.docx&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;&lt;p&gt;Exercício 08. 80&#39;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="n">unitttest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
 </pre></div>
 
 
-<p>if <strong>name</strong> == '<strong>main</strong>':
-  unitttest.main()</p>
-<p>```
-Executando o teste</p>
+<p>Executando o teste</p>
 <div class="codehilite"><pre><span></span>python docx_test_case.py
+
+----------------------------------------------------------------------
+Ran 1 test in 0.309s
+
+OK
 </pre></div>
 
 
-<h2>```.</h2>
-<p>Ran 1 test in 0.309s</p>
-<p>OK
-```</p>
-<p>O caso de teste é bem simples, ele apenas espera que o html gerado contenha um paragráfo <code>&lt;p&gt;</code> com o texto <em>Exercício 08. 80</em>.</p>
+<p>O caso de teste é bem simples, ele apenas espera que o html gerado contenha um paragráfo <code>&lt;p&gt;</code> com o texto <code>Exercício 08. 80</code>.</p>
 <p>Agora que sabemos que a versão 0.7.0 funciona vamos fazer checkout para o último release do projeto.</p>
 <div class="codehilite"><pre><span></span>git checkout v0.9.9
 </pre></div>
@@ -89,14 +97,16 @@ Executando o teste</p>
 
 <p>Rodando novamente o caso de teste:</p>
 <div class="codehilite"><pre><span></span>python docx_test_case.py
+
+
+---------------------------------------------------------------------
+Ran 1 test in 0.235s
+
+FAILED (failures=1)
 </pre></div>
 
 
-<h2>```</h2>
-<p>Ran 1 test in 0.235s</p>
-<p>FAILED (failures=1)
-```
-Opa! O teste começou a falhar. Com isso temos as informações necessárias para começar a usar o git bisect.</p>
+<p>Opa! O teste começou a falhar. Agora temos as informações necessárias para começar a usar o git bisect.</p>
 <h3>Usando git bisect para encontrar o commit que introduziu o bug</h3>
 <p>Para iniciar o git bisect faça:</p>
 <div class="codehilite"><pre><span></span>git bisect start
@@ -111,17 +121,22 @@ git bisect bad v0.9.9
 
 
 <p>A partir desse ponto o git bisect irá escolher um commit entre o commit bom e o ruim. A saída é semelhante com essa:</p>
-<p><code>Bisecting: 277 revisions left to test after this (roughly 8 steps)
-[551d8fec898fb773fc6585478918e74c268142f0] Refs #134. More test cases</code></p>
-<p>Rodando novamente o caso de teste percebemos que o teste continua falhando.</p>
-<div class="codehilite"><pre><span></span>python docx_test_case.py
+<div class="codehilite"><pre><span></span><span class="n">Bisecting</span><span class="o">:</span> <span class="mi">277</span> <span class="n">revisions</span> <span class="n">left</span> <span class="n">to</span> <span class="n">test</span> <span class="n">after</span> <span class="k">this</span> <span class="o">(</span><span class="n">roughly</span> <span class="mi">8</span> <span class="n">steps</span><span class="o">)</span>
+<span class="o">[</span><span class="mi">551</span><span class="n">d8fec898fb773fc6585478918e74c268142f0</span><span class="o">]</span> <span class="n">Refs</span> <span class="err">#</span><span class="mi">134</span><span class="o">.</span> <span class="n">More</span> <span class="n">test</span> <span class="n">cases</span>
 </pre></div>
 
 
-<h2>```</h2>
-<p>Ran 1 test in 0.235s</p>
-<p>FAILED (failures=1)
-```</p>
+<p>Rodando novamente o caso de teste percebemos que o teste continua falhando.</p>
+<div class="codehilite"><pre><span></span>python docx_test_case.py
+
+
+---------------------------------------------------------------------
+Ran 1 test in 0.235s
+
+FAILED (failures=1)
+</pre></div>
+
+
 <p>Iremos informar para o git bisect que o bug continua acontecendo:</p>
 <div class="codehilite"><pre><span></span>git bisect bad
 </pre></div>
@@ -134,16 +149,15 @@ git bisect bad v0.9.9
 
 <p>O git bisect irá escolher outro commit e deveremos informar novamente se o bug continua acontecendo ou não. Essse último passo será repetido até que o git bisect encontre o commit em que o bug começou a ocorrer.</p>
 <p>No caso desse exemplo o git bisect informou que o seguinte commit introduziu o bug:</p>
-<p>```
-3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
+<div class="codehilite"><pre><span></span>3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
 commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
-Author: <author> <email>
-Date:   Wed Jul 29 15:17:49 2015 -0400</p>
-<div class="codehilite"><pre><span></span>Refs #134. Handle tab characters like spaces
+Author: &lt;author&gt; &lt;email&gt;
+Date:   Wed Jul 29 15:17:49 2015 -0400
+
+    Refs #134. Handle tab characters like spaces
 </pre></div>
 
 
-<p>```</p>
 <p>Para encerrar o git bisect use:</p>
 <div class="codehilite"><pre><span></span>git bisect reset
 </pre></div>
@@ -169,16 +183,15 @@ Para isso o git bisect conta com um modo automático. </p>
 </ol>
 <p><em>Casos de teste feitos com unittest já retornam status diferente de zero em caso de falha.</em></p>
 <p>Saída:</p>
-<p>```
-3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
+<div class="codehilite"><pre><span></span>3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
 commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
-Author: <author> <email>
-Date:   Wed Jul 29 15:17:49 2015 -0400</p>
-<div class="codehilite"><pre><span></span>Refs #134. Handle tab characters like spaces
+Author: &lt;author&gt; &lt;email&gt;
+Date:   Wed Jul 29 15:17:49 2015 -0400
+
+    Refs #134. Handle tab characters like spaces
 </pre></div>
 
 
-<p>```</p>
 <p>Para encerrar o git bisect use:</p>
 <div class="codehilite"><pre><span></span>git bisect reset
 </pre></div>
@@ -207,7 +220,7 @@ Date:   Wed Jul 29 15:17:49 2015 -0400</p>
 <ul>
 <li><a href="https://git-scm.com/docs/git-bisect">git-scm bisect: https://git-scm.com/docs/git-bisect</a></li>
 </ul>
-<div id="disqus_thread"></div>
+<div class="disqus" id="disqus_thread"></div>
 <script>
     (function() {
         var d = document, s = d.createElement('script');
@@ -222,7 +235,6 @@ Date:   Wed Jul 29 15:17:49 2015 -0400</p>
 
     </article>
   </section>
-
 
 
 
