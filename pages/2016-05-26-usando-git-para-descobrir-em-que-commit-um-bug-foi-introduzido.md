@@ -8,13 +8,13 @@ Esses dias eu atualizei uma biblioteca que uso em um projeto chamada [pydocx](ht
     
     html = PyDocX.to_html('file.docx')
 
-Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como *<li>* ao invés de *<p>*.
+Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a acontecer. Alguns parágrafos do docx começaram a ser interpretados como `<li>` ao invés de `<p>`.
 
-O parágrafo abaixo, por exemplo, começou a ser convertido para *<li>Exercício 08. 80...* ao invés de *<p>Exercício 08. 80...:*
+O parágrafo abaixo, por exemplo, começou a ser convertido para `<li>Exercício 08. 80...` ao invés de `<p>Exercício 08. 80...`
 
-*Exercício 08. 80 - O ânion bromato reage com o ânion brometo em meio ácido gerando a substância simples bromo segundo a equação:* 
+`Exercício 08. 80 - O ânion bromato reage com o ânion brometo em meio ácido gerando a substância simples bromo segundo a equação:`
 
-Para identificar em que commit esse bug foi inserido eu usei um comando do git chamado bisect. Antes de mostrarmos como o bisect funciona, vamos reproduzir o bug atraveś de um caso de teste:
+Para identificar em que commit esse bug foi inserido eu usei um comando do git chamado bisect. Para usarmos o `git bisect` precisamos encontrar um commit em que o bug acontece e um commit em que o bug não acontece, vamos fazer isso criando um teste unitário:
 
 	git clone git@github.com:CenterForOpenScience/pydocx.git && cd pydocx
 
@@ -22,7 +22,7 @@ Vamos para a versão em que o bug não acontecia.
 
 	git checkout v.0.7.0
 
-Vamos criar um caso de teste chamado *docx_test_case.py* que reproduz o comportamento esperado.
+Vamos criar um caso de teste chamado `docx_test_case.py` que reproduz o comportamento esperado.
 
 ```python
 # coding: utf-8
@@ -53,7 +53,7 @@ Ran 1 test in 0.309s
 OK
 ```
 
-O caso de teste é bem simples, ele apenas espera que o html gerado contenha um paragráfo `<p>` com o texto *Exercício 08. 80*.
+O caso de teste é bem simples, ele apenas espera que o html gerado contenha um paragráfo `<p>` com o texto `Exercício 08. 80`.
 
 Agora que sabemos que a versão 0.7.0 funciona vamos fazer checkout para o último release do projeto.
 
@@ -69,7 +69,7 @@ Ran 1 test in 0.235s
 
 FAILED (failures=1)
 ```
-Opa! O teste começou a falhar. Com isso temos as informações necessárias para começar a usar o git bisect.
+Opa! O teste começou a falhar. Agora que temos as informações necessárias para começar a usar o git bisect.
 
 
 ### Usando git bisect para encontrar o commit que introduziu o bug

@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from datetime import datetime
+from flask_flatpages import pygments_style_defs
 from flask import render_template
 from app import app, pages
 
@@ -15,6 +16,10 @@ def home():
 
     return render_template('index.html', pages=sorted_posts, author=author, 
     	title=title, year=year)
+
+@app.route('/pygments.css')
+def pygments_css():
+    return pygments_style_defs('manni'), 200, {'Content-Type': 'text/css'}
 
 @app.route('/<path:path>/')
 def page(path):
