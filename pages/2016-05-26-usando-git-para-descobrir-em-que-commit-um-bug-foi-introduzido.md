@@ -178,7 +178,7 @@ Para encerrar o git bisect use:
 * Se você não passar um commit para git bisect good | bad o bisect pegará o commit corrente
  
 
-Você pode encontrar o docx usado nesse post [aqui](https://github.com/IuryAlves/iuryalves.github.io/raw/master/_examples/2016-05-23.descobrindo-em-que-commit-um-bug-foi-introduzido-com-git/file.docx)
+Você pode encontrar o docx usado nesse post [aqui](https://github.com/IuryAlves/iuryalves.github.io/raw/master/static/file.docx)
 
 ### Referências:
 
