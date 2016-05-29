@@ -2,7 +2,7 @@
 
 import os
 
-REPO_NAME = "iuryalves.github.io"  # Used for FREEZER_BASE_URL
+REPO_NAME = "/"  # Used for FREEZER_BASE_URL
 DEBUG = True
 AUTHOR = {
 	'name': 'Iury Alves',
