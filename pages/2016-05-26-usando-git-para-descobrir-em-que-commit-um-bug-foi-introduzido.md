@@ -12,7 +12,9 @@ Após atualizar a versão do pydocx de 0.7.0 para 0.9.9 um bug começou a aconte
 
 O parágrafo abaixo, por exemplo, começou a ser convertido para `<li>Exercício 08. 80...` ao invés de `<p>Exercício 08. 80...`
 
-`Exercício 08. 80 - O ânion bromato reage com o ânion brometo em meio ácido gerando a substância simples bromo segundo a equação:`
+
+    Exercício 08. 80 - O ânion bromato reage com o ânion brometo em meio ácido
+    gerando a substância simples bromo segundo a equação:
 
 Para identificar em que commit esse bug foi inserido eu usei um comando do git chamado bisect. Para usarmos o `git bisect` precisamos encontrar um commit em que o bug acontece e um commit em que o bug não acontece, vamos fazer isso criando um teste unitário:
 
@@ -24,34 +26,31 @@ Vamos para a versão em que o bug não acontecia.
 
 Vamos criar um caso de teste chamado `docx_test_case.py` que reproduz o comportamento esperado.
 
-```python
-# coding: utf-8
+    # coding: utf-8
 
-import unittest
-from pydocx import PyDocX
+    import unittest
+    from pydocx import PyDocX
 
 
-class DocxToHtmlTestCase(unittest.TestCase):
-	
-  def test_paragraph(self):
-    html = PyDocX.to_html('file.docx').encode("utf-8")
+    class DocxToHtmlTestCase(unittest.TestCase):
+    	
+      def test_paragraph(self):
+        html = PyDocX.to_html('file.docx').encode("utf-8")
 
-    self.assertIn('<p>Exercício 08. 80', html)
+        self.assertIn('<p>Exercício 08. 80', html)
 
-if __name__ == '__main__':
-  unitttest.main()
+    if __name__ == '__main__':
+      unitttest.main()
 
-```
 Executando o teste
 
 	python docx_test_case.py
 
-```.
-----------------------------------------------------------------------
-Ran 1 test in 0.309s
+    ----------------------------------------------------------------------
+    Ran 1 test in 0.309s
 
-OK
-```
+    OK
+
 
 O caso de teste é bem simples, ele apenas espera que o html gerado contenha um paragráfo `<p>` com o texto `Exercício 08. 80`.
 
@@ -63,13 +62,13 @@ Rodando novamente o caso de teste:
 
 	python docx_test_case.py
 
-```
----------------------------------------------------------------------
-Ran 1 test in 0.235s
 
-FAILED (failures=1)
-```
-Opa! O teste começou a falhar. Agora que temos as informações necessárias para começar a usar o git bisect.
+    ---------------------------------------------------------------------
+    Ran 1 test in 0.235s
+
+    FAILED (failures=1)
+
+Opa! O teste começou a falhar. Agora temos as informações necessárias para começar a usar o git bisect.
 
 
 ### Usando git bisect para encontrar o commit que introduziu o bug
@@ -87,21 +86,20 @@ Precisamos informar pro git bisect um commit bom e um commit ruim, no nosso caso
 
 A partir desse ponto o git bisect irá escolher um commit entre o commit bom e o ruim. A saída é semelhante com essa:
 
-```
-Bisecting: 277 revisions left to test after this (roughly 8 steps)
-[551d8fec898fb773fc6585478918e74c268142f0] Refs #134. More test cases
-```
+    Bisecting: 277 revisions left to test after this (roughly 8 steps)
+    [551d8fec898fb773fc6585478918e74c268142f0] Refs #134. More test cases
+
 
 Rodando novamente o caso de teste percebemos que o teste continua falhando.
 
 	python docx_test_case.py
 
-```
----------------------------------------------------------------------
-Ran 1 test in 0.235s
 
-FAILED (failures=1)
-```
+    ---------------------------------------------------------------------
+    Ran 1 test in 0.235s
+
+    FAILED (failures=1)
+
 
 Iremos informar para o git bisect que o bug continua acontecendo:
 
@@ -115,14 +113,13 @@ O git bisect irá escolher outro commit e deveremos informar novamente se o bug 
 
 No caso desse exemplo o git bisect informou que o seguinte commit introduziu o bug:
 
-```
-3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
-commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
-Author: <author> <email>
-Date:   Wed Jul 29 15:17:49 2015 -0400
 
-    Refs #134. Handle tab characters like spaces
-```
+    3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
+    commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
+    Author: <author> <email>
+    Date:   Wed Jul 29 15:17:49 2015 -0400
+
+        Refs #134. Handle tab characters like spaces
 
 Para encerrar o git bisect use:
 
@@ -155,14 +152,14 @@ Vamos então usar o git bisect no modo automático:
 
 Saída:
 
-```
-3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
-commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
-Author: <author> <email>
-Date:   Wed Jul 29 15:17:49 2015 -0400
 
-    Refs #134. Handle tab characters like spaces
-```
+    3de61857e0b7efb36a94bd8c26180ee03f7b1030 is the first bad commit
+    commit 3de61857e0b7efb36a94bd8c26180ee03f7b1030
+    Author: <author> <email>
+    Date:   Wed Jul 29 15:17:49 2015 -0400
+
+        Refs #134. Handle tab characters like spaces
+
 
 Para encerrar o git bisect use:
 

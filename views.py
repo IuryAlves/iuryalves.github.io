@@ -26,4 +26,5 @@ def page(path):
     # `path` is the filename of a page, without the file extension
     # e.g. "first-post"
     page = pages.get_or_404(path)
-    return render_template('page.html', page=page)
+    title = app.config.get("BLOG_TITLE")
+    return render_template('page.html', page=page, title=title)

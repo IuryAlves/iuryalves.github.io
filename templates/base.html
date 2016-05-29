@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="{{ "/img/favicon.png" }}" type="image/png">
 
-  <title>{% block page_title %}Your Site{% endblock %}</title>
+  <title>{{title}}</title>
 
   <script type="text/javascript" src="{{ url_for('static', filename='js/analytics.js') }}"></script>
   {% block css %}
       <link rel="stylesheet" href="{{ url_for('static', filename='css/screen.css') }}">
       <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
       
   {% endblock %}
 
