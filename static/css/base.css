@@ -1,3 +1,19 @@
 .nav-menu {
 	margin-left: 2%;
 }
+
+.li-inline{
+	margin-top: 2%;
+}
+
+.li-inline li {
+	display: inline;
+}
+
+.li-inline li a {
+	color: #398ad5;
+}
+
+.li-inline li a:hover {
+	text-decoration: underline;
+}
