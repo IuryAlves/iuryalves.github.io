@@ -5,6 +5,7 @@ from flask_flatpages import pygments_style_defs
 from flask import render_template
 from app import app, pages
 
+
 @app.route('/')
 def home():
     posts = [page for page in pages if 'date' in page.meta]
@@ -26,5 +27,4 @@ def page(path):
     # `path` is the filename of a page, without the file extension
     # e.g. "first-post"
     page = pages.get_or_404(path)
-    title = app.config.get("BLOG_TITLE")
-    return render_template('page.html', page=page, title=title)
+    return render_template('page.html', page=page, title=page.meta.title)
