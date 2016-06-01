@@ -1,5 +1,5 @@
 title: Usando git para descobrir em que commit um bug foi introduzido
-date: 2016-05-25 12:00:00
+date: 25/05/2016
 description: Git bisect é um comando do git que usa busca binária para encontrar o commit que introduziu um bug.
 
 Esses dias eu atualizei uma biblioteca que uso em um projeto chamada [pydocx](https://github.com/CenterForOpenScience/pydocx). Essa biblioteca converte docx para html, seu uso é bem simples, basta fazer:
