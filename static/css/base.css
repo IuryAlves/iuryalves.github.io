@@ -2,18 +2,18 @@
 	margin-left: 2%;
 }
 
-.li-inline{
+.ul-inline{
 	margin-top: 2%;
 }
 
-.li-inline li {
+.ul-inline li {
 	display: inline;
 }
 
-.li-inline li a {
+.ul-inline li a {
 	color: #398ad5;
 }
 
-.li-inline li a:hover {
+.ul-inline li a:hover {
 	text-decoration: underline;
 }

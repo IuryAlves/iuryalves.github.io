@@ -7,7 +7,7 @@ Este blog é a minha tentativa de registrar as experiências que faço no meu te
 
 Você pode me contactar das seguintes formas:
 
-<ul class="li-inline">
+<ul class="ul-inline">
     <li>
         <a target="_blank" href="{{author.twitter}}">Twitter</a>,
     </li>
