@@ -18,6 +18,14 @@ def home():
     return render_template('index.html', pages=sorted_posts, author=author, 
     	title=title, year=year)
 
+@app.route("/about")
+def about():
+    author = app.config.get("AUTHOR")
+    title = app.config.get("BLOG_TITLE")
+    year = datetime.now().year
+    page = pages.get_or_404('about')
+    return render_template('about.html', author=author, title=title, year=year, page=page)
+
 @app.route('/pygments.css')
 def pygments_css():
     return pygments_style_defs('manni'), 200, {'Content-Type': 'text/css'}

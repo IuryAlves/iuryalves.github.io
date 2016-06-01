@@ -11,6 +11,6 @@ import main
 
 if __name__ == '__main__':
 	app = main.app
-	PORT = app.config.get("PORT", 5000)
-	HOST = app.config.get("HOST", 'localhost')
+	PORT =  8080
+	HOST = '0.0.0.0'
 	app.run(host=HOST, port=PORT)
