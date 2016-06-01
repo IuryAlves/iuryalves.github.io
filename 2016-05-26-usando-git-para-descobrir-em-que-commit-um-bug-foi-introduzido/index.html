@@ -5,26 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon"  href="/static/img/favicon.png" type="image/png">
 
-  <title>Iury&#39;s thoughts</title>
+  <title></title>
 
-  <script type="text/javascript" src="/static/js/analytics.js"></script>
+  
+    <script type="text/javascript" src="/static/js/analytics.js"></script>
+  
   
 	
       <link rel="stylesheet" href="/static/css/screen.css">
-      <link rel="stylesheet" href="/static/css/index.css">
       <link rel="stylesheet" href="/static/css/base.css">
-      
   
 	<link rel="stylesheet" href="/pygments.css">
 	<link rel="stylesheet" href="/static/css/page.css">
-
+  
 
 </head>
 <body>
 
 <nav class="nav-menu">
-    <ul class="li-inline">
+    <ul class="ul-inline">
         <li><a href="/">Página Inicial</a></li>
+        <li><a href="/about">Sobre</a></li>
         <li><a target="_blank" href="https://github.com/IuryAlves/iuryalves.github.io">Código Fonte</a></li>
     </ul>
 </nav>
@@ -34,7 +35,7 @@
       
 	<header>
 	<h1 class="post-title dark-grey">Usando git para descobrir em que commit um bug foi introduzido</h1>
-	<time datetime="2016-05-25 12:00:00" class="post-date">25/05/2016</time>
+	<time datetime="25/05/2016" class="post-date">25/05/2016</time>
 </header>
 	<p>Esses dias eu atualizei uma biblioteca que uso em um projeto chamada <a href="https://github.com/CenterForOpenScience/pydocx">pydocx</a>. Essa biblioteca converte docx para html, seu uso é bem simples, basta fazer:</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">pydocx</span> <span class="kn">import</span> <span class="n">PyDocX</span>

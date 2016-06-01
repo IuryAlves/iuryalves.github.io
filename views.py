@@ -21,10 +21,9 @@ def home():
 @app.route("/about")
 def about():
     author = app.config.get("AUTHOR")
-    title = app.config.get("BLOG_TITLE")
     year = datetime.now().year
     page = pages.get_or_404('about')
-    return render_template('about.html', author=author, title=title, year=year, page=page)
+    return render_template('about.html', author=author, title='Sobre', year=year, page=page)
 
 @app.route('/pygments.css')
 def pygments_css():
@@ -35,5 +34,4 @@ def page(path):
     # `path` is the filename of a page, without the file extension
     # e.g. "first-post"
     page = pages.get_or_404(path)
-    print page
     return render_template('page.html', page=page)
