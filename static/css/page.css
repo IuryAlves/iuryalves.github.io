@@ -1,4 +1,6 @@
 pre {
+	overflow-x: scroll; 
+	padding: 0 16px;
 	font-size: 0.9em;
 	margin-top: 4%;
 	margin-bottom: 4%;
