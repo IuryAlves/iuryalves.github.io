@@ -22,7 +22,6 @@ def home():
 def about():
     author = app.config.get("AUTHOR")
     year = datetime.now().year
-    page = pages.get_or_404('about')
     return render_template('about.html', author=author, title='Sobre', year=year, page=page)
 
 @app.route('/pygments.css')

@@ -11,6 +11,7 @@ import main
 
 if __name__ == '__main__':
 	app = main.app
-	PORT =  8080
-	HOST = '0.0.0.0'
-	app.run(host=HOST, port=PORT)
+	port =  os.getenv("PORT", 5000)
+	host = os.getenv("HOST", "localhost")
+	debug = os.getenv("DEBUG", False)
+	app.run(host=host, port=port, debug=debug)
