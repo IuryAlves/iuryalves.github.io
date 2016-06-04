@@ -13,3 +13,11 @@ pre {
 h2 {
 	color: #446CB3;
 }
+
+a:link { 
+	color: #0000EE; 
+}
+
+a:visited {
+ color: #551A8B; 
+}
