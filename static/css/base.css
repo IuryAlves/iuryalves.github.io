@@ -17,3 +17,6 @@
 .ul-inline li a:hover {
 	text-decoration: underline;
 }
+.p-align-center {
+    text-align: center;
+}

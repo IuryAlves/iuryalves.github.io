@@ -8,7 +8,7 @@ AUTHOR = {
 	'name': 'Iury Alves',
 	'twitter': 'https://twitter.com/IuryAlvesdeSouz',
 	'github': 'https://github.com/IuryAlves',
-	'email': 'iuryalves20@gmail.com'
+	'email': 'iuryalves20.gmail.com'
 }
 BLOG_TITLE = "Iury's thoughts"
 
